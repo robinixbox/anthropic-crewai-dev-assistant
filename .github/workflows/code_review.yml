@@ -17,6 +17,8 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: write
+      checks: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -55,3 +57,9 @@ jobs:
         if: failure()
         run: |
           echo "AI Code Review failed. Check the logs for details."
+          
+      - name: Create summary
+        if: success()
+        run: |
+          echo "## AI Code Review completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "The AI has analyzed the code changes and provided feedback." >> $GITHUB_STEP_SUMMARY
