@@ -1,0 +1,95 @@
+analyse_requirements:
+  description: >
+    Analyser en détail la demande suivante: {demande}
+    Identifier tous les besoins fonctionnels et non-fonctionnels.
+    Clarifier toutes les ambiguïtés et proposer des questions à poser 
+    si certains points sont flous.
+    
+    Note que les exigences non-fonctionnelles comme la performance, la sécurité,
+    la scalabilité et la maintenabilité sont aussi importantes que les fonctionnalités.
+    
+    Contexte technique additionnel: {contexte}
+  expected_output: >
+    Une liste détaillée des spécifications techniques et fonctionnelles, 
+    avec identification des priorités et des points d'attention.
+    Inclure une section pour les questions qui doivent être clarifiées
+    avec le client ou les parties prenantes.
+  agent: requirements_analyst
+
+design_architecture:
+  description: >
+    Concevoir l'architecture logicielle pour répondre aux spécifications suivantes: {specifications}
+    Considérer les contraintes techniques suivantes: {contraintes}
+    
+    Ton architecture doit inclure:
+    1. La structure générale du système
+    2. Les composants principaux et leurs interactions
+    3. Les choix technologiques avec justifications
+    4. Les patterns de conception utilisés
+    5. Les considérations de sécurité, performance et extensibilité
+    
+    Langage cible: {langage}
+  expected_output: >
+    Un document d'architecture complet incluant les modules principaux, les interfaces,
+    les choix technologiques justifiés et les diagrammes conceptuels (en format texte).
+    Inclure une section sur les risques potentiels et comment les mitiger.
+  agent: code_architect
+
+implement_code:
+  description: >
+    Implémenter le code {langage} selon les spécifications: {specifications}
+    et l'architecture proposée: {architecture}
+    
+    Tu dois produire un code de haute qualité qui:
+    1. Suit les meilleures pratiques du langage {langage}
+    2. Est bien commenté et documenté
+    3. Inclut des tests unitaires appropriés
+    4. Gère correctement les erreurs
+    5. Respecte les conventions de style standard
+    
+    Concentre-toi sur la lisibilité et la maintenabilité du code.
+  expected_output: >
+    Code source complet, bien structuré, documenté et prêt à être testé.
+    Inclure des exemples d'utilisation et expliquer les choix d'implémentation importants.
+  agent: code_developer
+
+review_code:
+  description: >
+    Effectuer une revue détaillée du code suivant: {code}
+    Vérifier la conformité aux spécifications: {specifications}
+    
+    Évaluer le code sur les aspects suivants:
+    1. Qualité et lisibilité du code
+    2. Respect des bonnes pratiques de {langage}
+    3. Performances et optimisations possibles
+    4. Gestion des erreurs et cas limites
+    5. Sécurité et vulnérabilités potentielles
+    6. Tests unitaires (présence et couverture)
+    7. Documentation et commentaires
+    
+    Sois particulièrement attentif aux bugs subtils et aux problèmes potentiels qui pourraient
+    se manifester en production.
+  expected_output: >
+    Rapport de revue structuré identifiant les problèmes potentiels classés par sévérité,
+    les améliorations suggérées avec exemples de code, et une évaluation globale
+    de la qualité du code.
+    Le rapport doit être constructif et éducatif, expliquant le "pourquoi" derrière chaque suggestion.
+  agent: code_reviewer
+
+fix_issues:
+  description: >
+    Corriger les problèmes identifiés dans la revue de code: {revue}
+    Code original: {code}
+    
+    Pour chaque problème identifié:
+    1. Comprendre la nature du problème
+    2. Proposer une solution optimale
+    3. Implémenter la correction
+    4. S'assurer que la correction n'introduit pas de nouveaux problèmes
+    
+    Essaie de maintenir la cohérence du style avec le code original tout en
+    améliorant sa qualité.
+  expected_output: >
+    Code corrigé avec un résumé des modifications apportées et les justifications
+    des choix d'implémentation.
+  agent: code_developer
