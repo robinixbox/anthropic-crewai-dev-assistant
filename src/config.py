@@ -59,10 +59,15 @@ class Config:
         """
         config_path = self.base_dir / self.config_dir / filename
         
+        # Vérifier si le fichier existe avant de l'ouvrir
+        if not config_path.exists():
+            logger.error(f"Configuration file not found: {config_path}")
+            return {}
+            
         try:
             with open(config_path, 'r') as file:
                 config = yaml.safe_load(file)
-            return config
+            return config if config else {}
         except Exception as e:
             logger.error(f"Error loading configuration from {config_path}: {e}")
             return {}
