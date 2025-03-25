@@ -1,0 +1,57 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  ai-code-review:
+    if: |
+      (github.event_name == 'pull_request') ||
+      (github.event_name == 'issue_comment' && 
+       github.event.issue.pull_request && 
+       contains(github.event.comment.body, '/review'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Determine PR number
+        id: pr
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          else
+            echo "PR_NUMBER=${{ github.event.issue.number }}" >> $GITHUB_ENV
+          fi
+      
+      - name: Run AI Code Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python src/main.py --github-workflow --pr ${{ env.PR_NUMBER }}
+      
+      - name: Handle errors
+        if: failure()
+        run: |
+          echo "AI Code Review failed. Check the logs for details."
