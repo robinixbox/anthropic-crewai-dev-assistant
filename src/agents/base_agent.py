@@ -1,4 +1,6 @@
 import logging
+import os
+from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
 from crewai import Agent
 from crewai.agents.cache import SqliteCache
@@ -61,8 +63,22 @@ class BaseAgent:
         # Set up tools
         self.tools = tools or self._default_tools()
         
-        # Set up cache
-        self.cache = cache or SqliteCache(path="agent_cache.db")
+        # Set up cache with absolute path in a dedicated cache directory
+        if cache:
+            self.cache = cache
+        else:
+            # Create cache directory if it doesn't exist
+            cache_dir = Path(os.getcwd()) / "cache"
+            try:
+                cache_dir.mkdir(parents=True, exist_ok=True)
+                cache_path = str(cache_dir / "agent_cache.db")
+                logger.info(f"Using cache at: {cache_path}")
+                self.cache = SqliteCache(path=cache_path)
+            except Exception as e:
+                logger.error(f"Failed to create cache directory: {e}")
+                # Fallback to in-memory cache if file system access fails
+                logger.warning("Using in-memory cache as fallback")
+                self.cache = SqliteCache(path=":memory:")
         
         # Create the CrewAI agent instance
         self.agent = self._create_agent()
